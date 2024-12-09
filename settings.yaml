@@ -1,3 +1,7 @@
 system:
   ip:
   port: 8080
+  env: dev
+log:
+  app: blogx_server
+  dir: logs
