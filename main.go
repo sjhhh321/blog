@@ -4,16 +4,13 @@ import (
 	"blogx_server/core"
 	"blogx_server/flags"
 	"blogx_server/global"
-	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	flags.Parse()
-
+	//这里是要先读取配置参数，然后才能做各种初始化
 	global.Config = core.ReadConf()
 	core.InitLogrus()
-	logrus.Warnf("xxx")
-	logrus.Debug("yyy")
-	logrus.Error("zzz")
-	logrus.Infof("11123")
+	global.DB = core.InitDB()
+
 }
