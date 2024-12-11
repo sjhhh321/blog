@@ -13,3 +13,12 @@ db:
   db: blogx
   debug: false
   source: mysql
+
+db1:
+  user: root
+  password: 123456
+  host: 127.0.0.1
+  port: 3306
+  db: blogx
+  debug: false
+  source: mysql

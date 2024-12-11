@@ -16,3 +16,6 @@ func (db *DB) DSN() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		db.User, db.Password, db.Host, db.Port, db.DB)
 }
+func (db *DB) Empty() bool {
+	return db.User == "" && db.Password == "" && db.Host == "" && db.Port == 0
+}
