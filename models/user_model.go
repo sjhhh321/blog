@@ -13,6 +13,7 @@ type UserModel struct {
 	Password       string `gorm:"size:64" json:"-"`
 	Email          string `gorm:"size:256" json:"email"`
 	OpenID         string `gorm:"size:64" json:"openID"` //第三方登录的唯一id
+	Role           int8   `json:"role"`                  //角色   1 管理员   2  普通用户  3  访客
 }
 type UserConfModel struct {
 	UserID             uint       `gorm:"unique" json:"userID"`
