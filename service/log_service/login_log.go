@@ -32,7 +32,7 @@ func NewLoginSuccess(c *gin.Context, loginType enum.LoginType) {
 	})
 }
 
-func NewLoginFail(c *gin.Context, loginType enum.LoginType, msg string, username, string, pwd string) {
+func NewLoginFail(c *gin.Context, loginType enum.LoginType, msg string, username string, pwd string) {
 	ip := c.ClientIP()
 	addr := core.GetIpAddr(ip)
 
