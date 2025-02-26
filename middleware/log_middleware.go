@@ -1,11 +1,8 @@
 package middleware
 
 import (
-	"bytes"
-	"fmt"
+	"blogx_server/service/log_service"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
-	"io"
 )
 
 type ResponseWriter struct {
@@ -19,18 +16,15 @@ func (w *ResponseWriter) Write(data []byte) (int, error) {
 }
 func LogMiddleware(c *gin.Context) {
 	// 请求中间件
-	byteData, err := io.ReadAll(c.Request.Body)
-	if err != nil {
-		logrus.Errorf(err.Error())
-	}
-	fmt.Println("body: ", string(byteData))
-	// 这是因为c.Request.Body被使用后就会销毁，不能再绑定，所以需要重新赋值创建。
-	c.Request.Body = io.NopCloser(bytes.NewReader(byteData))
+	log := log_service.NewActionLogByGin(c)
+	log.SetRequest(c)
+	c.Set("log", log)
 	res := &ResponseWriter{
 		ResponseWriter: c.Writer,
 	}
 	c.Writer = res
 	c.Next()
 	// 响应中间件
-	fmt.Println("response: ", string(res.Body))
+	log.SetResponse(res.Body)
+	log.Save()
 }
