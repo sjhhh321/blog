@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"io"
+	"strings"
 )
 
 type ActionLog struct {
@@ -19,6 +20,16 @@ type ActionLog struct {
 	requestBody  []byte
 	responseBody []byte
 	log          *models.LogModel
+	showRequest  bool
+	showResponse bool
+	itemList     []string
+}
+
+func (ac *ActionLog) ShowRequest() {
+	ac.showRequest = true
+}
+func (ac *ActionLog) ShowResponse() {
+	ac.showResponse = true
 }
 
 func (ac *ActionLog) SetTitle(title string) {
@@ -47,13 +58,25 @@ func (ac *ActionLog) Save() {
 		})
 		return
 	}
+	if ac.showRequest {
+		ac.itemList = append(ac.itemList, fmt.Sprintf("<div class=\"log_request\"><div class=\"log_request_head\"><span class=\"log_request_method delete\">%s</span><span class=\"log_request_path\">%s</span></div><div class=\"log_request_body\"><pre class=\"log_json_body\">%s</pre></div></div>",
+			ac.c.Request.Method,
+			ac.c.Request.URL.String(),
+			string(ac.requestBody),
+		))
+	}
+
+	if ac.showResponse {
+		ac.itemList = append(ac.itemList, fmt.Sprintf("<div class=\"log_response\"><pre class=\"log_json_body\">%s</pre></div>", string(ac.responseBody)))
+	}
+
 	ip := ac.c.ClientIP()
 	addr := core.GetIpAddr(ip)
 	userID := uint(1)
 	log := models.LogModel{
 		LogType: enum.ActionLogType,
 		Title:   ac.title,
-		Content: "",
+		Content: strings.Join(ac.itemList, "\n"),
 		Level:   ac.level,
 		UserID:  userID,
 		IP:      ip,

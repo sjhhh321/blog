@@ -19,9 +19,11 @@ func LogMiddleware(c *gin.Context) {
 	log := log_service.NewActionLogByGin(c)
 	log.SetRequest(c)
 	c.Set("log", log)
+	// 这个是先创建一个我自定义的继承了ResponseWriter的结构体
 	res := &ResponseWriter{
 		ResponseWriter: c.Writer,
 	}
+	// 这里是用自己的去替换
 	c.Writer = res
 	c.Next()
 	// 响应中间件
